@@ -1,111 +1,163 @@
-# GET BASIC INFORMATION ABOUT AN ATHLETE AND CREATE ATHLETE OBJECTS
-# -------------------------------------------------------
+# MODULE FOR ASKING QUESTIONS FROM CONSOLE AND CONVERTING ANSWERS TO VARIOUS DATA TYPES
+# -------------------------------------------------------------------------------------
 
 # LIBRARIES AND MODULES
-import kuntoilija
 
+# CLASS DEFINITIONS
 
+class Question():
+    """A class containing methods to ask questions on console
+      and converting answers to various datatypes
+    ."""
 
-# Ask a question and convert the answer to float
+    def __init__(self, question):
+        self.question = question
 
+    def ask_user_float(self, loop):
+        """Asks a question and converts the answer to a floating point number
 
-def ask_user(question):
-    """Asks a question from the user and converts answer to a floating point number
+        Args:
+            loop (bool): If True asks the question until able to convert it
 
-    Args:
-        question (str): The question to ask
+        Returns:
+            tuple: answer as float, error message, error code, detailed error
+        """
 
-    Returns:
-        tuple: answer as float, Error message, Error Code and a detailed error message
-    """
-    while True:
-        answer_txt = input(question)
+        # If loop argument is true use while loop until user inputs correct value
+        if loop == True:
+            
+            while True:
+                answer_txt = input(self.question)
+                # TODO: Add a routine to change , to . if user types the wrong symbol
+                # Let's try to convert input to numeric
+                try:
+                    answer = float(answer_txt)
+                    result = (answer, 'OK', 0, 'Conversion successful')
+                    break
 
-        # Let's try to convert input to numeric
-        try:
-            answer = float(answer_txt)
-            result = (answer, 'OK', 0, 'Conversion successful')
-            break
-    # If an error occurs tell the user to check
-        except Exception as e:
-            print('Virhe syötetyssä arvossa, älä käytä yksiköitä', e)
-            result = (0, 'Error', 1, str(e))
-    return result
+                # If an error occurs tell the user to check
+                except Exception as e:
+                    print('Virhe syötetyssä arvossa, älä käytä yksiköitä', e)
+                    result = (0, 'Error', 1, str(e))
+            
+        # Else ask once and return zero value and error information
+        else:
+            answer_txt = input(self.question)
 
+            # Let's try to convert input to numeric
+            try:
+                answer = float(answer_txt)
+                result = (answer, 'OK', 0, 'Conversion successful')
 
-# Enter information about an athlete
-nimi = input('Nimi: ')
+            # If an error occurs tell the user to check
+            except Exception as e:
+                print('Virhe syötetyssä arvossa, älä käytä yksiköitä', e)
+                result = (0, 'Error', 1, str(e))
 
-# Use ask_user function to get height and convert it into float
-answer = ask_user('Pituus (cm) ')
+        return result
+    
+    def ask_user_integer(self, loop):
+        """Asks a question and converts the answer to an integer
 
-# Read the 1st element of the tuple containing height value
-pituus = answer[0]
+        Args:
+            loop (bool): If True asks the question until able to convert it
 
-answer = ask_user('Paino (kg) ')
-paino = answer[0]
+        Returns:
+            tuple: answer as integer, error message, error code, detailed error
+        """
 
-answer = ask_user('Ikä ')
-ika = answer[0]
+        # If loop argument is true use while loop until user inputs correct value
+        if loop == True:
+            
+            while True:
+                answer_txt = input(self.question)
 
-answer = ask_user('Sukupuoli 0-nainen, 1-mies) ')
-sukupuoli = answer[0]
+                # Let's try to convert input to numeric
+                try:
+                    answer = int(answer_txt)
+                    result = (answer, 'OK', 0, 'Conversion successful')
+                    break
 
+                # If an error occurs tell the user to check
+                except Exception as e:
+                    print('Virhe syötetyssä arvossa, älä käytä yksiköitä', e)
+                    result = (0, 'Error', 1, str(e))
+            
+        # Else ask once and return zero value and error information
+        else:
+            answer_txt = input(self.question)
 
-'''
-# Loop until user gives a correctly formatted value to height question
-while True:
-    pituus_txt = input('Pituus (cm): ')
+            # Let's try to convert input to numeric
+            try:
+                answer = int(answer_txt)
+                result = (answer, 'OK', 0, 'Conversion successful')
 
-    # Let's try to convert input to numeric
-    try:
-        pituus = float(pituus_txt)
-        break
-    # If an error occurs tell the user to check 
-    except Exception as e:
-        print('Virhe syötetyssä arvossa, älä käytä yksiköitä', e)
+            # If an error occurs tell the user to check
+            except Exception as e:
+                print('Virhe syötetyssä arvossa, älä käytä yksiköitä', e)
+                result = (0, 'Error', 1, str(e))
 
-# Loop until correct weight value
-while True:
-    paino_txt = input('Paino (kg): ')
+        return result
+    
+    def ask_user_boolean(self, true_value, false_value, loop):
+        """Asks a question and converts the answer to a boolean value
 
-    # Let's try to convert input to numeric
-    try:
-        paino = float(paino_txt)
-        break
-    # If an error occurs tell the user to check 
-    except Exception as e:
-        print('Virhe syötetyssä arvossa, älä käytä yksiköitä', e)
+        Args:
+            true_value (str): value to use as True
+            false_value (str): value to use as False
+            loop (bool): If True asks the question until able to convert it
 
-# Loop until correct age value
-while True:
-    ika_txt = input('Ikä: ')
+        Returns:
+            tuple: answer as boolean, error message, error code, detailed error
+        """
 
-    # Let's try to convert input to numeric
-    try:
-        ika = float(ika_txt)
-        break
-    # If an error occurs tell the user to check 
-    except Exception as e:
-        print('Virhe syötetyssä arvossa, älä käytä yksiköitä', e)
+        # If loop argument is true use while loop until user inputs correct value
+        prompt = f'{self.question}, vastaa {true_value}/{false_value}: '
+        if loop == True:
+            
+            while True:
+                answer_txt = input(prompt)
+                answer_txt = answer_txt.lower()
 
+                if answer_txt == true_value.lower():
+                    answer = True
+                    result = (answer, 'OK', 0, 'Conversion successful')
+                    break
+                elif answer_txt == false_value.lower():
+                    answer = False
+                    result = (answer, 'OK', 0, 'Conversion successful')
+                    break
+                else:
+                    print('Virhe syötetyssä arvossa, sallitut arvot', true_value, false_value)
+                    result = ('N/A', 'Error', 1, 'unable to convert to boolean')
 
-# Loop until correct gender value
-while True:
-    sukupuoli_txt = input('Sukupuoli, 1 mies, 0 nainen: ')
+            
+        # Else ask once and return zero value and error information
+        else:
+            answer_txt = input(prompt)
+            answer_txt = answer_txt.lower()
 
-    # Let's try to convert input to numeric
-    try:
-        sukupuoli = float(sukupuoli_txt)
-        break
-    # If an error occurs tell the user to check 
-    except Exception as e:
-        print('Virhe syötetyssä arvossa, vain 1 ja 0 sallittu', e)
+            if answer_txt == true_value.lower():
+                answer = True
+                result = (answer, 'OK', 0, 'Conversion successful')
+            elif answer_txt == false_value.lower():
+                answer = False
+                result = (answer, 'OK', 0, 'Conversion successful')
+            else:
+                print('Virhe syötetyssä arvossa, sallitut arvot', true_value, false_value)
+                result = ('N/A', 'Error', 1, 'unable to convert to boolean')
 
-'''
-kuntoilija1 = kuntoilija.Kuntoilija(nimi, pituus, paino, ika, sukupuoli)
+        return result
+if __name__ == "__main__":
+    
+    question = Question('Kuinka paljon painat (kg) ')
+    answer_and_error = question.ask_user_float(False)
+    print(answer_and_error)
 
-print(kuntoilija1.nimi, 'painoindeksisi on ', kuntoilija1.bmi)
+    question2 = Question('Kuinka vanha olet ')
+    answer_and_error = question2.ask_user_integer(False)
+    print(answer_and_error)
 
-print('Viimeisen kysymyksen virheilmoitus',
-      answer[1], 'koodi', answer[2], 'engl. ilmoitus', answer[3])
+    question3 = Question('Haluatko lähteä viikonlopun viettoon?')
+    answer_and_error =  question3.ask_user_boolean('Y', 'N', False)
+    print(answer_and_error)
